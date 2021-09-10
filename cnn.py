@@ -134,8 +134,6 @@ while True:
     if eventos == sg.WINDOW_CLOSED:
         break
 
-
-
 model.save('./models')
 model.save_weights('./checkpoint.h5')
 
