@@ -93,7 +93,6 @@ previsao = (previsao > 0.5)
 
 training_base.class_indices
 
-print('RESULTADO TESTE COM FOTO DO ORION', int(previsao))
 
 print('----------------------------------------------')
 
@@ -124,11 +123,10 @@ else:
 sg.theme('Reddit')
 
 layout = [
-    [sg.Text('O Animal é: ')],
-    [sg.Text(resultado)]
+    [sg.Text('O Animal é um : '), sg.Text(resultado)],
 ]
 
-janela = sg.Window('Gato ou cachorro?', layout, size=(150,100))
+janela = sg.Window('Gato ou cachorro?', layout, size=(300,100))
 
 
 while True:
