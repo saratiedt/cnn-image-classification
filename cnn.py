@@ -1,4 +1,3 @@
-from tensorflow import keras
 from tensorflow.keras import Sequential
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Conv2D, MaxPooling2D, Flatten, Dense, Dropout, BatchNormalization
@@ -7,6 +6,7 @@ from tensorflow.keras.preprocessing.image import ImageDataGenerator
 
 import numpy as np
 from tensorflow.keras.preprocessing import image
+from tensorflow.python.keras.preprocessing.image import load_img
 
 
 
@@ -65,14 +65,56 @@ training_base = training_generate.flow_from_directory('dataset/training_set',
                                                       batch_size=32,
                                                       class_mode='binary')
 
+# carregando dados do teste
 test_base = gerador_teste.flow_from_directory('dataset/test_set',
                                               target_size=(64, 64),
                                               batch_size=32,
                                               class_mode='binary')
 
-model.fit_generator(training_base, steps_per_epoch=1800/32,
+model.fit_generator(training_base, steps_per_epoch=4000/64,
                     epochs=5, validation_data=test_base,
-                    validation_steps=200/32)
+                    validation_steps=1000/64)
+
+
+# teste com foto orion
+imagem_teste = image.load_img('dataset/test_set/gato/orion.jpg', target_size = (64,64))
+
+imagem_teste = image.img_to_array(imagem_teste)
+
+imagem_teste /= 255
+
+imagem_teste = np.expand_dims(imagem_teste, axis = 0)
+
+previsao = model.predict(imagem_teste)
+
+previsao = (previsao > 0.5)
+
+training_base.class_indices
+
+print('RESULTADO TESTE COM FOTO DO ORION', int(previsao))
+
+print('----------------------------------------------')
+
+# teste com foto zoe
+imagem_teste_cachorro = image.load_img('dataset/test_set/cachorro/zoe2.jpg', target_size = (64,64))
+
+imagem_teste_cachorro = image.img_to_array(imagem_teste_cachorro)
+
+imagem_teste_cachorro /= 255
+
+imagem_teste_cachorro = np.expand_dims(imagem_teste_cachorro, axis = 0)
+
+previsao_cachorro = model.predict(imagem_teste_cachorro)
+
+previsao_cachorro = (previsao_cachorro > 0.5)
+
+
+print('RESULTADO TESTE COM FOTO DA ZOE', int(previsao_cachorro))
+
+print('----------------------------------------------')
 
 model.save('./models')
 model.save_weights('./checkpoint.h5')
+
+
+print('VALORES', training_base.class_indices)
