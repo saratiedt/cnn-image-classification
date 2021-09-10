@@ -11,7 +11,6 @@ from tensorflow.python.keras.preprocessing.image import load_img
 from PySimpleGUI import PySimpleGUI as sg
 
 
-
 # defininso o RNA
 model = Sequential()
 
@@ -77,48 +76,29 @@ model.fit_generator(training_base, steps_per_epoch=4000/64,
                     epochs=5, validation_data=test_base,
                     validation_steps=1000/64)
 
-
-# teste com foto orion
-imagem_teste = image.load_img('dataset/test_set/gato/orion.jpg', target_size = (64,64))
+# teste com foto zoe
+imagem_teste = image.load_img(
+    'dataset/test_set/cachorro/zoe2.jpeg', target_size=(64, 64))
 
 imagem_teste = image.img_to_array(imagem_teste)
 
 imagem_teste /= 255
 
-imagem_teste = np.expand_dims(imagem_teste, axis = 0)
+imagem_teste = np.expand_dims(imagem_teste, axis=0)
 
 previsao = model.predict(imagem_teste)
 
 previsao = (previsao > 0.5)
 
-training_base.class_indices
-
-
-print('----------------------------------------------')
-
-# teste com foto zoe
-imagem_teste_cachorro = image.load_img('dataset/test_set/cachorro/zoe2.jpg', target_size = (64,64))
-
-imagem_teste_cachorro = image.img_to_array(imagem_teste_cachorro)
-
-imagem_teste_cachorro /= 255
-
-imagem_teste_cachorro = np.expand_dims(imagem_teste_cachorro, axis = 0)
-
-previsao_cachorro = model.predict(imagem_teste_cachorro)
-
-previsao_cachorro = (previsao_cachorro > 0.5)
-
 # interface
-
-resultado = int(previsao_cachorro)
+resultado = int(previsao)
 
 if resultado == 0:
     resultado = 'cachorro'
 elif resultado == 1:
     resultado = 'gato'
 else:
-   resultado = 'Indefinido'
+    resultado = 'Indefinido'
 
 sg.theme('Reddit')
 
@@ -126,7 +106,7 @@ layout = [
     [sg.Text('O Animal é um : '), sg.Text(resultado)],
 ]
 
-janela = sg.Window('Gato ou cachorro?', layout, size=(300,100))
+janela = sg.Window('Gato ou cachorro?', layout, size=(300, 100))
 
 
 while True:
@@ -136,4 +116,3 @@ while True:
 
 model.save('./models')
 model.save_weights('./checkpoint.h5')
-
