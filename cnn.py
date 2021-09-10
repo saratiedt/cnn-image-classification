@@ -8,6 +8,8 @@ import numpy as np
 from tensorflow.keras.preprocessing import image
 from tensorflow.python.keras.preprocessing.image import load_img
 
+from PySimpleGUI import PySimpleGUI as sg
+
 
 
 # defininso o RNA
@@ -108,13 +110,34 @@ previsao_cachorro = model.predict(imagem_teste_cachorro)
 
 previsao_cachorro = (previsao_cachorro > 0.5)
 
+# interface
 
-print('RESULTADO TESTE COM FOTO DA ZOE', int(previsao_cachorro))
+resultado = int(previsao_cachorro)
 
-print('----------------------------------------------')
+if resultado == 0:
+    resultado = 'cachorro'
+elif resultado == 1:
+    resultado = 'gato'
+else:
+   resultado = 'Indefinido'
+
+sg.theme('Reddit')
+
+layout = [
+    [sg.Text('O Animal é: ')],
+    [sg.Text(resultado)]
+]
+
+janela = sg.Window('Gato ou cachorro?', layout, size=(150,100))
+
+
+while True:
+    eventos, valores = janela.read()
+    if eventos == sg.WINDOW_CLOSED:
+        break
+
+
 
 model.save('./models')
 model.save_weights('./checkpoint.h5')
 
-
-print('VALORES', training_base.class_indices)
